@@ -1,13 +1,16 @@
-What is the difference between initial traffic and incremental traffic?
+Initial vs Incremental traffic
 
-Talk about stremaing from KV with initial vs incremental traffic and 
-incremental traffic requires back-index look-up
+The data being streamed from KV node can be classified into initial traffic and
+incremental traffic. Initial traffic refers to the case where the data streamed
+from KV belongs to the first snapshot on the KV node. As KV node maintains an 
+immutable view of unique keys, the first snapshot is guaraneed to have no updates
+and therefore, there is no need to read form back-index. Just updating back index
+with the key value pair is sufficient.
 
-The data service has MVCC with append only writes. So, any mutation will be appended
-to the existing snapshot as delta snapshot. This means that the first snapshot that
-indexer recives will not contain any previous infomation. This is referred to as initial traffic.
+The data streamed from KV after the first snapshot is being refereed to as incremental
+traffic. During incremental traffic, the back index is read, the value of the docID
+updated and the corresponding entry in main-index is updated as well.
 
-Any mutations 
-So, initial build and initial traffic are not the same.
 
-Note: Initial build can contain some incrmental traffic as well
+When indexer enters DGM (Data-Greater than-Memory), then this back-index look-up during
+incremental traffic requires reading a page from disk and this can potentially slow down index build 
