@@ -1,0 +1,23 @@
+This page conatins multiple title options for the couchbase blog article:
+
+a. Performance evaluation of insert heavy workloads under DGM scenario
+	1. Need to explain about back-index lookup problem
+	2. Explain about bloom filters and how there are used for optimizing insert heavy workload
+		i)  Bloom filters are only applicable for incremental traffic and not initial traffic
+	        ii) Therefore, there is a need to explain initial vs incremental traffic
+
+	-> Since, we are defining initial vs incremental traffic, there is no need to keep this article
+	tightly bound to insert heavy work loads
+
+b. Performance characterization of Global secondary index build pipeline 
+	1. What do we try to explain? 
+		i)  How indexer manages storage engine?
+		ii) What is the difference between initial and incremental traffic 
+	2. What happens during an insert/update operation
+
+	-> I would organize the flow as follows: 
+		=> Explain GSI build pipeline in brief -> From projector to storage engine. In this section itself we define
+		initial vs incremental traffic -> Indexer maintains separate streams for initial and incremental traffic
+		=> Storage management by indexer -> Explain the main and back index problems, how initial traffic is handled,
+		how incremental traffic is handled etc.
+		=> Where will this come?
