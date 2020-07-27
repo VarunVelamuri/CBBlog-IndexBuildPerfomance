@@ -1,0 +1,19 @@
+Overview of GSI build pipeline
+
+At a high level, the index build pipeline can be categorised in 3 stages:
+	a. Processing at projector
+	b. Book-keeping at indexer
+	c. Read/ writes from storage subsystem
+
+Projector processes running the the KV node establishes data streams with KV
+for all the buckets on which indexes are defined for. Additionally, projector
+keeps a track of all the index definitions on each of the indexer nodes. For
+each mutation that is streamed from KV, projector evaluates the incoming
+mutation against all the indexes, extracts the secondary keys as per the index
+definition, encodes the extraced data and sends it to indexer.
+
+After indexer receives the encoded data for each of the index, the book-keeping
+layer will update the book-keeping to handle scenarios like service restart,
+scans etc. The encoded key is then pushed to storage subsystem. Based on the type
+of storage sub-system, the encoded indexed data is either kept completely in-memory
+(or) will be distributed between both memory and disk.
