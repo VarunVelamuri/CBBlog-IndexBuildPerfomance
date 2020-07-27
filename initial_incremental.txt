@@ -2,6 +2,10 @@ What is the difference between initial traffic and incremental traffic?
 
 Indexer maintains sepearate streams for initial build and incremental build.
 
+Any index build starting from scratch is referred to as initial index build. After the 
+mutations in the index catchup with all the mutations of the bucket, then the index will be
+merged into incremental stream
+
 Initial build refers to the case where the mutations are streamead from data service starting
 from the first mutation. Incremental traffic builds on top of initial stream
 
@@ -10,7 +14,5 @@ What can happen in initial stream?
 	b. But there can be updates as well in initial stream
 
 So, initial build and initial traffic are not the same 
-
-
 
 Note: Initial build can contain some incrmental traffic as well
