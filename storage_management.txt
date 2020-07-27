@@ -24,5 +24,4 @@ first time, the back index contains a mapping between doc123 and the value that 
 into main store. Therefore, by looking into back-index, indexer figures out the value that has to
 be updated on a mutation.
 
-When indexer enters DGM (Data-Greater than-Memory), then this back-index look-up requires
-reading a page from disk and this can potentially slow down index build
+Back-index look-up is done only for incremtntal traffic and can be skipped during initial traffic
