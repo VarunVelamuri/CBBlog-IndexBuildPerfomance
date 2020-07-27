@@ -1,0 +1,15 @@
+Storage management by indexer
+
+For each index that gets created, indexer maintains two instances of stoage engine: 
+	1. One instance stores the indexed keys along with the document ID's. We refer to this as main-index. E.g., for a document doc123 and the encoded key is "couchbase", the main index would store couchbase,doc123 as the key and the value will be nil
+	2. The other instance stores the mapping between document ID and the indexed key. We refer to this as back index. E.g., for the same document back index would contain the key as "doc123" and the value as "couchbase"
+
+Back index is mainted by indexer because when the data service sends a mutation, it does not send the old value for performance
+reasons. Therefore, if the key is updated, the new mutation arrives as doc123 <>, giving no-clue about what data already indexed for
+this document. To address this issue, indexer maintains back-index which keeps a mapping between document ID and already indexed key.
+
+When indexer receives a mutation, it checks if there is any existing data for the document, deletes the old value and inserts the new vale.
+
+In DGM scenarios, this operatio becomes costly because the check for existing key can involve disk I/O thereby slowing down index builds. 
+
+
