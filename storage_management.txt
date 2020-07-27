@@ -1,0 +1,28 @@
+Storage layer management by indexer
+
+For each index that is created on a indexer node, GSI stack maintains two
+instances of storage subsystem. One instance is used to store all the indexed
+data of the index along with the document ID. This instance is referred to as
+main-index. All the scans are served from the main-index.
+
+The second instance of storage subsystem maintained by GSI layer for an index
+maintains a mapping between document ID and the key that is inserted into
+main-index store. E.g., for a document "doc123" with indexed data as "couchbase", 
+the main index would contain a key as "couchbase" suffixed with "doc123" i.e. 
+"couchbase#doc123" and maps to a nil value. The back-index will contain a mapping
+between "doc123" as key and "couchbase" as value.
+
+When KV receives a document update, KV service would stream the entire updated document
+as a mutation to GSI build pipeline for performance reasons. Therefore, if in doc123, the
+field "couchbase" is updated to "nosqldatabase", then indexer would receive a new mutation,
+with field "nosqldatabase" for document "doc123". This poses a challenge to GSI stack as
+the previous indexed value of "doc123" is not sent along with the mutation for performance
+reasons. One way to solve this problem is by iterating through all the main-index and find
+the key with suffix "doc123" and replace the new key. This obviously is not performance
+efficient. This issue is handled by the back-index. When a document is inserted for the 
+first time, the back index contains a mapping between doc123 and the value that will be inserted
+into main store. Therefore, by looking into back-index, indexer figures out the value that has to
+be updated on a mutation.
+
+When indexer enters DGM (Data-Greater than-Memory), then this back-index look-up requires
+reading a page from disk and this can potentially slow down index build
