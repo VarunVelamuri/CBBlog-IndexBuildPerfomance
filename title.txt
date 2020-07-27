@@ -13,6 +13,8 @@ Performance characterization on Global Seconday index build pipeline
 		<Any mutation whose seqno is a part of the first snapshot is considered initial traffic>
 		<During incremental traffic, back index loop has to be performed which can impact build performance>
 
+	<Factors affecting index build performance>
+
 	<Performance evaluation of initial index builds>
 	<Performance evaluation of incremental index builds>
 	<Things to watch out for during slow builds>
