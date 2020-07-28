@@ -1,0 +1,14 @@
+Factors affecting index build performance
+
+Some of the key factors that are affecting index build performance are:
+	a. Projector/Indexer CPU -> If projector CPU is saturated, then processing incoming
+	mutations will be delayed and this can cause the slow-down the indexer build. Similarly,
+	if indexer CPU is saturated, then updating the book-keeping and pushing it to storage
+	subsystem can get delayed and therefore cause build slow-down
+	b. Indexer RSS - If the memory utilisation of the indexer process exceeds the quota, then
+	the in-memory page will be evicted and flushed to disk. If a look-up needs to be performed,
+	then there will be a disk read. Depending on the disk I/O saturation, this can drastically
+	slow down index build
+
+There are many other factors like network bandwidth, projector memory, size of indexed key, index definition
+that will contribute to index build performance but they can be ignored for the current performance characterization
